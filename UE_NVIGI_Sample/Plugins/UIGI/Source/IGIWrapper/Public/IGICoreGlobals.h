@@ -10,10 +10,11 @@ namespace IGI
 	/** Check if IGI PACK Folder Exist Dynamically */
 #if IGI_CORE_BINARY_EXISTS
 	/** Path to NVIGI DLL found */
-	const FString				GIGI_CORE_BINARIES_PATH	{ IGI_CORE_BINARIES_PATH };			// Value from nvigi Module
-	const FString				GIGI_CORE_DLL_NAME		{ IGI_CORE_BINARY_NAME };		// Value from nvigi Module
-	const FString				GIGI_BASE_MODELS_PATH	{ IGI_CORE_MODELS_PATH };		// Value from nvigi Module
-	constexpr bool				GIGI_CORE_DLL_EXIST		{ IGI_CORE_BINARY_EXISTS };			// Value from nvigi Module
+	const FString				GIGI_CORE_BINARIES_PATH		{ IGI_CORE_BINARIES_PATH };		// Value from nvigi Module
+	const FString				GIGI_PLUGIN_BINARIES_PATH	{ IGI_PLUGINS_BINARIES_PATH };	// Value from nvigi Module
+	const FString				GIGI_CORE_DLL_NAME			{ IGI_CORE_BINARY_NAME };		// Value from nvigi Module
+	const FString				GIGI_BASE_MODELS_PATH		{ IGI_CORE_MODELS_PATH };		// Value from nvigi Module
+	constexpr bool				GIGI_CORE_DLL_EXIST			{ IGI_CORE_BINARY_EXISTS };			// Value from nvigi Module
 #else
 	/** Path to NVIGI DLL not found */
 	const FString				GIGI_CORE_BINARIES_PATH	{ TEXT("IGI Path not found!") };	// Value from nvigi Module
@@ -42,6 +43,6 @@ namespace IGI
 	/////////////////////////////////////////////////
 	
 	/** Use CiG CUDA */
-	inline constinit bool 		GIGI_USE_CIG_CUDA		{ false };
+	inline constinit bool 		GIGI_USE_CIG_CUDA		{ true };
 	
 }

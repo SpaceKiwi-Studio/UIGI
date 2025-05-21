@@ -8,7 +8,6 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 #include "IGICoreGlobals.h"
-#include "IGICorePlatformRHI.h"
 #include "IGICoreLog.h"
 
 using namespace IGI;
@@ -16,7 +15,6 @@ using namespace IGI;
 namespace nvigi
 {
     using Result = uint32_t;
-    struct InferenceInterface;
     struct alignas(8) PluginID;
     struct alignas(8) IHWICuda;
     struct alignas(8) IHWICommon;
@@ -28,7 +26,9 @@ namespace nvigi
     struct alignas(8) RPCParameters;
 
     using InferenceExecutionState = uint32_t;
+    struct alignas(8) InferenceInterface;
     struct alignas(8) InferenceInstance;
+    struct alignas(8) PluginAndSystemInformation;
 }
 
 class FIGICore;
@@ -54,36 +54,15 @@ public:
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
 
-    /** Call this function before loading any IGI feature */
-    void RegisterIGIFeature(nvigi::PluginID Feature, const TArray<FString>& AIMBinaryDirectories, const TArray<nvigi::PluginID>& IncompatibleFeatures);
-
-    /** NVIDIA:  Will check whether an IGI feature is available, without logging any errors or warnings if it isn't available */
-    bool IsAIMFeatureAvailable(nvigi::PluginID Feature);
-
     /** NVIDIA: You may use bShushIGILog to downgrade AIM log errors and warnings to normal log messages during loading */
-    nvigi::Result LoadIGIFeature(const nvigi::PluginID& PluginID, const nvigi::InferenceInterface*& Interface, bool bShushAIMLog = false) const;
-    nvigi::Result UnloadIGIFeature(const nvigi::PluginID& PluginID, const nvigi::InferenceInterface*& Interface) const;
-    nvigi::Result CheckPluginCompatibility(const nvigi::PluginID& PluginID, const FString& Name);
-
-    bool Initialize_preDeviceManager(const FDynamicRHI& API) const;
-
-    /** Get the D3D12 parameters	*/
-#ifdef IGI_USE_GRAPHICS_API_D3D12
-    nvigi::D3D12Parameters		GetD3D12Parameters() const;
-#endif
-    /** Get the Vulkan parameters	*/
-#ifdef IGI_USE_GRAPHICS_API_VULKAN
-    nvigi::VulkanParameters		GetVulkanParameters() const;
-#endif
-    /** Get the CUDA parameters		*/
-    nvigi::CudaParameters		GetCudaParameters() const;
-    /** Get the CPU parameters		*/
-    nvigi::CPUParameters		GetCPUParameters() const;
-    /** Get the REST parameters		*/
-    nvigi::RESTParameters		GetRESTParameters() const;
-    /** Get the RPC parameters		*/
-    nvigi::RPCParameters		GetRPCParameters() const;
+    nvigi::Result LoadIGIFeature(const nvigi::PluginID& PluginID, nvigi::InferenceInterface*& Interface);
+    nvigi::Result UnloadIGIFeature(const nvigi::PluginID& PluginID, nvigi::InferenceInterface*& Interface);
 
 private:
     TPimplPtr<FIGICore> IGICore;
+
+    int m_adapter = -1;
+    nvigi::PluginAndSystemInformation* m_pluginInfo{};
+    
+    nvigi::Result CheckPluginCompatibility(const nvigi::PluginID& PluginID, const FString& Name);
 };
